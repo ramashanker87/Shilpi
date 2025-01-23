@@ -32,9 +32,15 @@ public class EmployeeApp{
     youngEmployees.forEach(System.out::println);
 
     System.out.println("\nEmployee Map:");
-    Map<String, Employee> employeeMap=employeeList.stream().collect(Collectors.toMap(Employee))
+    Map<String, Employee> employeeMap=employeeList.stream().collect(Collectors.toMap(Employee::getName, emp->emp));
+    employeeMap.forEach((key,value)->System.out.println(key+": "+value));
 
+    List<Employee> lowSalEmp=employeeList.stream().filter(emp->emp.salary<40000).collect(Collectors.toList());
+    lowSalEmp.forEach(System.out::println);
 
+    System.out.println("\nEmployees with age>25:");
+    List<Employee> oldEmployees=employeeList.stream().filter(emp->emp>25).collect(Collectors.ToList());
+    oldEmployees.forEach(System.out::println);
     }
 }
 
