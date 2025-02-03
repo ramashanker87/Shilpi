@@ -23,8 +23,8 @@ public class PatientController {
     }
 
     @GetMapping("/age/all")
-    public Map<String, Patient> getAllPatient() {
-        return patientService.readAllPatients();}
+    public Map<String, Patient> getAllPatients() {
+        return patientService.getAllPatients();}
 
     @PostMapping("/save")
     public Patient savePatient(@RequestBody Patient patient) {
@@ -33,7 +33,7 @@ public class PatientController {
 
     @PutMapping("/update")
     public Patient updatePatient(@RequestParam("id") String id,@RequestParam("Hospital Name") String hname) {
-        return patientService.update(id,hname);
+        return patientService.updateHname(id,hname);
     }
 
     @DeleteMapping("/delete")

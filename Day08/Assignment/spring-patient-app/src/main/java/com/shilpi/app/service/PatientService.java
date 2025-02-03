@@ -8,7 +8,7 @@ import java.util.Map;
 
 @Service
 public class PatientService {
-    Map<String, Patient> patientMap = new HashMap<String, Employee>();
+    Map<String, Patient> patientMap = new HashMap<>();
 
     public Patient createPatient(Patient patient) {
         patientMap.put(patient.getId(),patient);
@@ -17,7 +17,7 @@ public class PatientService {
 
     public Patient updateHname(String id, String newHname) {
         Patient patient= patientMap.get(id);
-        if(patient!=NULL) {
+        if(patient!=null) {
             patient.setHname(newHname);
         }
         return patient;

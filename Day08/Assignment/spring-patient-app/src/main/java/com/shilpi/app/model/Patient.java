@@ -14,7 +14,7 @@ public class Patient {
         return age;
     }
     public String getGender() {return gender;}
-    public void setHname(int hname) {
+    public void setHname(String hname) {
         this.hname = hname;
     }
 
@@ -23,7 +23,7 @@ public class Patient {
     String hname;
     int age;
     String gender;
-    public Patient(String id, String name, int age) {
+    public Patient(String id, String name, String hname, int age, String gender) {
         super();
         this.id = id;
         this.name = name;

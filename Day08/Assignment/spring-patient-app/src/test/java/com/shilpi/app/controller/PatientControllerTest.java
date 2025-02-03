@@ -1,15 +1,16 @@
-package com.rama.app.controller;
+package com.shilpi.app.controller;
 
-import com.rama.app.controller.EmployeeController;
-import com.rama.app.model.Employee;
-import com.rama.app.service.EmployeeService;
+import com.shilpi.app.controller.PatientController;
+import com.shilpi.app.model.Patient;
+import com.shilpi.app.service.PatientService;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,60 +23,38 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EmployeeControllerTest {
+public class PatientControllerTest {
     @InjectMocks
-    EmployeeController employeController;
+    PatientController patientController;
+    MockMvc mockMvc;
     @Mock
-    EmployeeService employeeService;
+    PatientService patientService;
 
-    @Test
-    public void testGetAllEmployees() {
-        Map<String, Employee> employeeMap = new HashMap<>();
-        Employee employee1 = new Employee("1","Emp1",25);
-        Employee employee2 = new Employee("2","Emp2",26);
-        Employee employee3 = new Employee("3","Emp3",27);
-        employeeMap.put(employee1.getId(), employee1);
-        employeeMap.put(employee2.getId(), employee2);
-        employeeMap.put(employee3.getId(), employee3);
-        when(employeeService.readAllEmployee()).thenReturn(employeeMap);
-        Map<String, Employee> employeeResultMap=employeController.getAllEmployees();
-        assert employeeResultMap!=null;
-        assert employeeResultMap.size()==3;
-        assert employeeResultMap.get(employee1.getId())==employee1;
-        assert employeeResultMap.get(employee2.getId())==employee2;
-        assert employeeResultMap.get(employee3.getId())==employee3;
+    PatientControllerTest(){
+        MockitoAnnotations.openMocks(this);
+        mockMvc=MockMvcBuilders.standaloneSetup(patientController).build();
     }
 
     @Test
-    public void testCreateEmployees() {
-        Employee employee1 = new Employee("1","Emp1",25);
-        when(employeeService.createEmployee(employee1)).thenReturn(employee1);
-        Employee resultEmployee=employeController.createEmployees(employee1);
-        assert resultEmployee!=null;
-        assert resultEmployee.getId()==employee1.getId();
-        assert resultEmployee.getName().equals("Emp1");
-        assert resultEmployee.getAge()==25;
+    void testSavePatient() throws Exception{
+        Patient patient=new Patient("1", "P1", "ABC Hospital", 30, "M");
+        when(patientService.createPatient(any())).thenReturn(patient);
+
+        mockMvc.perform(post("/patient/save").contestType(MediaType.APPLICATION_JSON).content("{\"id\":\"1\",\"name\":\"P1\",\"hospitalName\":\"ABC Hospital\",\"age\":30,\"gender\":\"M\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.name").value("P1"));
+
     }
+
     @Test
-    public void testUpdateEmployees() {
-        Employee employee1 = new Employee("1","Emp1",25);
-        Employee employee2 = new Employee("2","Emp2",26);
-        when(employeeService.updateEmployee(anyString(),anyInt())).thenReturn(employee2);
-        Employee resultEmployee=employeController.updateEmployee(employee1.getId(),26);
-        assert resultEmployee!=null;
-        assert resultEmployee.getId()==employee2.getId();
-        assert resultEmployee.getName().equals("Emp2");
-        assert resultEmployee.getAge()==26;
-    }
+    public void testUpdatePatient() throws Exception {
+        Patient patient1 = new Patient("1", "P1", "ABC Hospital", 30, "M");
+        when(patientService.updateHname("1", "Updated Hospital")).thenReturn(patient1);
+       mockMvc.perform(put("/patient/update?id=1&hospitalName=Updated Hospital")).andExpect(status().isOk()).andExpect(jsonPath("$.hospitalName").value("Updated Hospital"));    }
     @Test
-    public void testDeleteEmployees() {
-        doNothing().when(employeeService).deleteEmployee(anyString());
-        employeController.deleteEmployee("1");
-        verify( employeeService, atLeast(1)).deleteEmployee(anyString());
+    public void testDeletePatient() throws Exception{
+        doNothing().when(patientService).deletePatient("1");
+        mockMvc.perform(delete("/patient/delete?id=1")).andExpect(status().isOk());
+        verify( patientService, times(1)).deletePatient("1");
     }
-    @Test
-    public void testGetEmployeeByName() {
-        employeController.getAllEmployeeByName();
-    }
+
 
 }
