@@ -1,5 +1,6 @@
 package com.shilpi.app.controller;
 
+import org.springframework.web.bind.annotation.*;
 import com.shilpi.app.model.Patient;
 import com.shilpi.app.service.PatientService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.Map;
 
 @RestController
@@ -22,22 +22,25 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping("/age/all")
+    @GetMapping("get/all/patient")
     public Map<String, Patient> getAllPatients() {
-        return patientService.getAllPatients();}
+        return patientService.readAllPatients();
+    }
 
-    @PostMapping("/save")
-    public Patient savePatient(@RequestBody Patient patient) {
+    @PostMapping("/create/patient")
+    public Patient createPatient(@RequestBody Patient patient) {
         return patientService.createPatient(patient);
     }
 
-    @PutMapping("/update")
-    public Patient updatePatient(@RequestParam("id") String id,@RequestParam("Hospital Name") String hname) {
-        return patientService.updateHname(id,hname);
+    @PutMapping("/update/patient")
+    public Patient updatePatient(@RequestParam("id") String id,@RequestParam("newHospitalName") String newHospitalName) {
+        return patientService.updatePatient(id,newHospitalName);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/patient")
     public void deletePatient(@RequestParam("id") String id) {
         patientService.deletePatient(id);
     }
 }
+
+
