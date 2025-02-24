@@ -7,7 +7,7 @@ docker-compose up
 ### In postman - POST http://localhost:8081/send
 data format -
     {
-        "name":"Ajay",
+        "name":"Shilpi",
         "id": 1,
         "hospitalName":"H1",         
         "age":21,
