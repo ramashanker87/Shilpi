@@ -12,23 +12,23 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Jackson2JsonMessageConverter jackson2JsonMessageConverter() {
+    public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jackson2JsonMessageConverter());
-        return rabbitTemplate;
+        template.setMessageConverter(jsonMessageConverter());
+        return template;
     }
 
     @Bean
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(
+    public SimpleRabbitListenerContainerFactory listenerContainerFactory(
             ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
-        factory.setMessageConverter(jackson2JsonMessageConverter());
+        factory.setMessageConverter(jsonMessageConverter());
         return factory;
     }
 }

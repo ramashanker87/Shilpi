@@ -4,41 +4,41 @@ import java.time.LocalDateTime;
 
 
 public class ParkingStart {
-    private String parkingNo;
-    private LocalDateTime startTime;
-    private String status;
-    private String registrationNo;
+    private String slotNumber;
+    private LocalDateTime entryTime;
+    private String currentStatus;
+    private String registrationNumber;
 
-    public String getParkingNo() {
-        return parkingNo;
+    public String getSlotgNumber() {
+        return slotNumber;
     }
-    public void setParkingNo(String parkingNo) {
-        this.parkingNo = parkingNo;
+    public void setSlotNumber(String slotNumber) {
+        this.slotNumber = slotNumber;
     }
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public LocalDateTime getEntryTime() {
+        return entryTime;
     }
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setEntryTime(LocalDateTime entryTime) {
+        this.entryTime = entryTime;
     }
-    public String getStatus() {
-        return status;
+    public String getCurrentStatus() {
+        return currentStatus;
     }
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
     }
-    public String getRegistrationNo() {
-        return registrationNo;
+    public String getRegistrationNumber() {
+        return registrationNumber;
     }
-    public void setRegistrationNo(String registrationNo) {
-        this.registrationNo = registrationNo;
+    public void setRegistrationNumber(String registrationNumber) {
+        this.registrationNumber = registrationNumber;
     }
 
-    public ParkingStart(String parkingNo, LocalDateTime startTime, String status, String registrationNo) {
-        this.parkingNo = parkingNo;
-        this.startTime = startTime;
-        this.status = status;
-        this.registrationNo = registrationNo;
+    public ParkingStart(String slotNumber, LocalDateTime entryTime, String currentStatus, String registrationNumber) {
+        this.slotNumber = slotNumber;
+        this.entryTime = entryTime;
+        this.currentStatus = currentStatus;
+        this.registrationNumbe = registrationNumbe;
     }
     public ParkingStart() {}
 }

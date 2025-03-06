@@ -15,46 +15,48 @@ public class ConsumerRabbitMqConfig {
     @Value("${rabbitmq.exchange.name}")
     private String exchangeName;
     @Value("${rabbitmq.start.response.queue.name}")
-    private String startResponseQueueName;
+    private String startQueue;
     @Value("${rabbitmq.end.response.queue.name}")
-    private String endResponseQueueName;
+    private String endQueue;
 
     @Value("${rabbitmq.start.response.routingkey.name}")
-    private String startResponseRoutingKeyName;
+    private String startRoutingKey;
     @Value("${rabbitmq.end.response.routingkey.name}")
-    private String endResponseRoutingKeyName;
+    private String endRoutingKey;
 
     @Bean
     public Queue startResponseQueue() {
-        return new Queue(startResponseQueueName, true);
+        return QueueBuilder.durable(startQueue).build();
     }
 
     @Bean
     public Queue endResponseQueue() {
-        return new Queue(endResponseQueueName, true);
+        return QueueBuilder.durable(endQueue).build();
+    }
+    public DirectExchange(){
+        return new DirectExchange(exchange);
     }
 
     @Bean
-    public Binding startResponseBinding(Queue startResponseQueue) {
-        return BindingBuilder.bind(startResponseQueue).to(new DirectExchange(exchangeName))
-                .with(startResponseRoutingKeyName);
+    public Binding blindStartResponseQueue(Queue startResponseQueue, DirectExchange directExchange) {
+        return BindingBuilder.bind(startResponseQueue).to(directExchange).with(startRoutingKey);
+
     }
 
     @Bean
-    public Binding endResponseBinding(Queue endResponseQueue) {
-        return BindingBuilder.bind(endResponseQueue).to(new DirectExchange(exchangeName))
-                .with(endResponseRoutingKeyName);
+    public Binding bindEndResponseQueue(Queue endResponseQueue, DirectExchange directExchange) {
+        return BindingBuilder.bind(endResponseQueue).to(directExchange).with(endRoutingKey);
     }
 
     @Bean
-    public Jackson2JsonMessageConverter consumerJsonMessageConverter() {
+    public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public AmqpTemplate consumerAmqpTemplate(ConnectionFactory connectionFactory) {
+    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(consumerJsonMessageConverter());
+        rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
     }
 }

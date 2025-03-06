@@ -26,9 +26,9 @@ public class ParkingConsumerService {
 
     @RabbitListener(queues = "${rabbitmq.start.request.queue.name}")
     public void processStartRequest(Car car) {
-        logger.info("Processing parking start request for car: " + car);
+        logger.info("Processing the start parking request for car: " + car);
 
-        String responseMessage = "Response - Parking started for car : " + car;
+        String responseMessage = "Output- Parking started for car : " + car;
 
 
         consumerAmqpTemplate.convertAndSend(exchangeName, startResponseRoutingKeyName, responseMessage);

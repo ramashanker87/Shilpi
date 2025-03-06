@@ -9,18 +9,18 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/parking")
-public class Parking {
-    private static final Logger logger = LoggerFactory.getLogger(Parking.class);
+public class ParkingController {
+    private static final Logger log = LoggerFactory.getLogger(ParkingController.class);
     @Autowired
     private ParkingService parkingService;
     @PostMapping("/start")
-    public String parkingStart(@RequestBody Car car, @RequestParam String parkingNumber) {
-        logger.info("car parking start request received {}", car.toString());
-        return parkingService.parkingStartService(car, parkingNumber);
+    public String startParking(@RequestBody Car car, @RequestParam String slotNumber) {
+        log.info("Received parking start request for car: {}", car);
+        return parkingService.parkingStartService(car, slotNumber);
     }
     @DeleteMapping("/end")
-    public String parkingEnd( @RequestParam String parkingNumber) {
-        logger.info("car parking end request received for parking number {}", parkingNumber);
-        return parkingService.parkingEndService(parkingNumber);
+    public String endPparking( @RequestParam String slotNumber) {
+        log.info("Received parking end request for car:  {}", slotNumber);
+        return parkingService.parkingEndService(slotNumber);
     }
 }

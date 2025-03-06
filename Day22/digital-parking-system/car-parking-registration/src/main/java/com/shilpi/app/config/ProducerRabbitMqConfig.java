@@ -12,96 +12,84 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ProducerRabbitMqConfig {
     @Value("${rabbitmq.exchange.name}")
-    private String exchangeName;
+    private String exchange;
     @Value("${rabbitmq.start.request.queue.name}")
-    private String startRequestQueueName;
+    private String startRequestQueue;
     @Value("${rabbitmq.end.request.queue.name}")
-    private String endRequestQueueName;
+    private String endRequestQueue;
     @Value("${rabbitmq.start.response.queue.name}")
-    private String startResponseQueueName;
+    private String startResponseQueue;
     @Value("${rabbitmq.end.response.queue.name}")
-    private String endResponseQueueName;
+    private String endResponseQueue;
 
     // Routing Keys
     @Value("${rabbitmq.start.request.routingkey.name}")
-    private String startRequestRoutingKeyName;
+    private String startRequestRoutingKey;
     @Value("${rabbitmq.end.request.routingkey.name}")
-    private String endRequestRoutingKeyName;
+    private String endRequestRoutingKey;
 
     // Routing Keys
     @Value("${rabbitmq.start.response.routingkey.name}")
-    private String startResponseRoutingKeyName;
+    private String startResponseRoutingKey;
     @Value("${rabbitmq.end.response.routingkey.name}")
-    private String endResponseRoutingKeyName;
+    private String endResponseRoutingKey;
 
     @Bean
-    public Queue startResponseQueue() {
-        return new Queue(startResponseQueueName, true);
-    }
-    @Bean
-    public Queue endResponseQueue() {
-        return new Queue(endResponseQueueName, true);
-    }
-    @Bean
-    public Binding startResponseBinding(Queue startResponseQueue) {
-        return BindingBuilder.bind(startResponseQueue).to(new DirectExchange(exchangeName))
-                .with(startResponseRoutingKeyName);
+    public Queue createStartRequestQueue() {
+        return QueueBuilder.durable(startRequestQueue).build();
     }
 
     @Bean
-    public Binding endResponseBinding(Queue endResponseQueue) {
-        return BindingBuilder.bind(endResponseQueue).to(new DirectExchange(exchangeName))
-                .with(endResponseRoutingKeyName);
+    public Queue createEndRequestQueue() {
+        return QueueBuilder.durable(endRequestQueue).build();
     }
 
     @Bean
-    public Jackson2JsonMessageConverter consumerJsonMessageConverter() {
+    public Queue createStartResponseQueue() {
+        return QueueBuilder.durable(startResponseQueue).build();
+    }
+
+    @Bean
+    public Queue createEndResponseQueue() {
+        return QueueBuilder.durable(endResponseQueue).build();
+    }
+
+    @Bean
+    public DirectExchange declareDirectExchange() {
+        return new DirectExchange(exchange);
+    }
+
+    @Bean
+    public Binding blindStartRequestQueue(Queue createStartRequestQueue, DirectExchange declareDirectExchang) {
+        return BindingBuilder.bind(createStartRequestQueue).to(declareDirectExchang).with(startRequestRoutingKey);
+
+    }
+
+    @Bean
+    public Binding bindEndRequestQueue(Queue createEndRequestQueue, DirectExchange declareDirectExchang) {
+        return BindingBuilder.bind(createEndRequestQueue).to(declareDirectExchang).with(endRequestRoutingKey);
+    }
+
+    @Bean
+    public Binding blindStartResponseQueue(Queue createStartResponseQueue, DirectExchange declareDirectExchang) {
+        return BindingBuilder.bind(createStartResponseQueue).to(declareDirectExchang).with(startResponseRoutingKey);
+
+    }
+
+    @Bean
+    public Binding bindEndResponseQueue(Queue createEndResponseQueue, DirectExchange declareDirectExchang) {
+        return BindingBuilder.bind(createEndResponseQueue).to(declareDirectExchang).with(endResponseRoutingKey);
+    }
+
+    @Bean
+    public MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
     }
 
-
     @Bean
-    public AmqpTemplate consumerAmqpTemplate(ConnectionFactory connectionFactory) {
+    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(consumerJsonMessageConverter());
-        return rabbitTemplate;
-    }
-    @Bean
-    public Queue startRequestQueue() {
-        return new Queue(startRequestQueueName, true);
-    }
-
-    @Bean
-    public Queue endRequestQueue() {
-        return new Queue(endRequestQueueName, true);
-    }
-
-    @Bean
-    public DirectExchange directExchange() {
-        return new DirectExchange(exchangeName);
-    }
-
-    @Bean
-    public Binding startRequestBinding(Queue startRequestQueue, DirectExchange exchange) {
-        return BindingBuilder.bind(startRequestQueue).to(exchange).with(startRequestRoutingKeyName);
-    }
-
-    @Bean
-    public Binding endRequestBinding(Queue endRequestQueue, DirectExchange exchange) {
-        return BindingBuilder.bind(endRequestQueue).to(exchange).with(endRequestRoutingKeyName);
-    }
-
-    @Bean
-    public Jackson2JsonMessageConverter producerJsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
-
-
-    @Bean
-    public AmqpTemplate producerAmqpTemplate(ConnectionFactory connectionFactory) {
-        RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(producerJsonMessageConverter());
+        rabbitTemplate.setMessageConverter(messageConverter());
         return rabbitTemplate;
     }
 }
-
