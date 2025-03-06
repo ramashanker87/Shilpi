@@ -1,6 +1,6 @@
 package com.shilpi.app.service;
 
-import com.ajay.app.module.Car;
+import com.shilpi.app.module.Car;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
